@@ -28,20 +28,21 @@ survminer, tidyverse, survival, tidyr
 
 **Subfolders:**
 
-**I. Auxiliary_function**:
-	> - create_seq.R. This function constructs the sequences with states 0 and 1 (No drug / drug) for the 52 weeks of 	  observation.
-	> - create_seq_hosp_days.R. This function creates a sequence indicating which days the patient was hospitalised 		in the 365 observation days.
-	> - create_coverage_days.R. This function calculates the days of drug coverage in the 365 observation days and 	       will be used for the adherence calculation.
-**II. Dataset:**
-	- DDD&class_pharm.xlxs. This excel file shows, for each ATC code, the defined daily dose (sheet 1) and the 	     related pharmacological class (sheet 2).
-	- data_for_sequences.Rdata. This dataset contains the selected patient cohort and all pharmacological purchases 	  for constructing the sequences.
-	- patients_final_cohort.Rdata. This dataset contains the unique codes of the patients in the final patient 	     cohort.
-	- final_dataset.Rdata. This is the final dataset used for predictive models.
-	- seq_combination.Rdata. Contains the combined RAS & BB & AA sequence for each patient.
-	- seq_diu.Rdata. Contains the sequence of diuretics for each patients who took         this drug class at least 	  one in the first year of observation.
-	- seq_aag.Rdata. Contains the sequence of antithrombotic agents for each patient who took this drug class at 	       least once in the first year of observation.
-	- seq_hosp_days.Rdata. Contains the sequence indicating the days each    patient was hospitalised in the first 		 year of observation.
-	- HC8_comb.Rdata, PAM2_aag.Rdata, PAM2_diu.Rdata. Contain the final partitions of the three sequence groups.
+> **I. Auxiliary_function**:
+-	create_seq.R. This function constructs the sequences with states 0 and 1 (No drug / drug) for the 52 weeks of 	  observation.
+- 	create_seq_hosp_days.R. This function creates a sequence indicating which days the patient was hospitalised 		in the 365 observation days.
+- 	create_coverage_days.R. This function calculates the days of drug coverage in the 365 observation days and 	       will be used for the adherence calculation.
+
+> **II. Dataset:**
+-	DDD&class_pharm.xlxs. This excel file shows, for each ATC code, the defined daily dose (sheet 1) and the 	     related pharmacological class (sheet 2).
+-	data_for_sequences.Rdata. This dataset contains the selected patient cohort and all pharmacological purchases 	  for constructing the sequences.
+- 	patients_final_cohort.Rdata. This dataset contains the unique codes of the patients in the final patient 	     cohort.
+-	final_dataset.Rdata. This is the final dataset used for predictive models.
+- 	seq_combination.Rdata. Contains the combined RAS & BB & AA sequence for each patient.
+-	seq_diu.Rdata. Contains the sequence of diuretics for each patients who took         this drug class at least 	  one in the first year of observation.
+- 	seq_aag.Rdata. Contains the sequence of antithrombotic agents for each patient who took this drug class at 	       least once in the first year of observation.
+-	seq_hosp_days.Rdata. Contains the sequence indicating the days each    patient was hospitalised in the first 		 year of observation.
+-	HC8_comb.Rdata, PAM2_aag.Rdata, PAM2_diu.Rdata. Contain the final partitions of the three sequence groups.
 
 
   
