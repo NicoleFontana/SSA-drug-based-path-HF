@@ -1,4 +1,6 @@
 # SSS-drug-based-path-HF
+Thesis work for Master Degree in Mathematical Engineering - Statistical Learning at Politecnico di Milano.
+
 ###### **Authors:** Nicole Fontana
 ###### **Advisor:** Francesca Ieva
 ###### **Coadvisor:** Laura Savaré
