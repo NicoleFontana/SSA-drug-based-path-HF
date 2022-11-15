@@ -1,4 +1,4 @@
-# SSS-drug-based-path-HF
+# Sequence analysis techniques to evaluate drugs-based diagnostic therapeutic paths in heart failure patients
 Thesis work for Master Degree in Mathematical Engineering - Statistical Learning at Politecnico di Milano.
 
 ###### **Authors:** Nicole Fontana
