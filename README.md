@@ -12,7 +12,7 @@ survminer, tidyverse, survival, tidyr
 We cannot provide the original administrative data due to confidentiality.
 
 **Code:**
-***1_pre_processing.R.** The code for section 1.3 of the manuscript execute the pre-processing of the 	administrative dataset of the Lombardy region. The covariates necessary for the analyses are created in this 	     dataset. In particular, each purchase of drugs will be assigned the relative DDD and pharmaceutical class. This 	     file outputs the initial dataset with 51 features.
+*	**1_pre_processing.R.** The code for section 1.3 of the manuscript execute the pre-processing of the 	administrative dataset of the Lombardy region. The covariates necessary for the analyses are created in this 	     dataset. In particular, each purchase of drugs will be assigned the relative DDD and pharmaceutical class. This 	     file outputs the initial dataset with 51 features.
 
 ***2_sequence_construction.R.** The code for section 3.2 of the manuscript shows how the sequences necessary for the analyses (Combined-sequence, DIU-sequence and AAG-sequence) are constructed. The first phase consists of preparing the longitudinal data to select pharmaceutical purchases in the first year of observation. Then a stratified undersampling is done with respect to the survival outcome to reduce the dataset. The "create_seq.R" function creates binary sequences for the five interest drugs; by aggregating the sequences of RAS, BB and AA the combined sequence is obtained. It is also created using "create_seq_hosp_days.R", the variable that counts the days of hospitalisation in the first year of observation.
 
