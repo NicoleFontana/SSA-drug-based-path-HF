@@ -1,7 +1,7 @@
 # SSS-drug-based-path-HF
-**Authors:** Nicole Fontana
-**Advisor:** Francesca Ieva
-**Coadvisor:** Laura Savaré
+###### **Authors:** Nicole Fontana
+###### **Advisor:** Francesca Ieva
+###### **Coadvisor:** Laura Savaré
 
 All analyses were performed using R version 4.1.2 (R Core Team (2021)).
 
