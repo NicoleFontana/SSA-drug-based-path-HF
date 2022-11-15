@@ -1,15 +1,14 @@
 # SSS-drug-based-path-HF
-> **Authors:** Nicole Fontana
-> **Advisor:** Francesca Ieva
-> **Coadvisor:** Laura Savaré
+**Authors:** Nicole Fontana
+**Advisor:** Francesca Ieva
+**Coadvisor:** Laura Savaré
 
-> All analyses were performed using R version 4.1.2 (R Core Team (2021)).
+All analyses were performed using R version 4.1.2 (R Core Team (2021)).
 
-> Required R packages: TraMineR, dplyr, RColorBrewer, tidyverse, stringr, diagram, cluster, WeightedCluster, corrplot, glmnet, car, caret, ROCR,
+Required R packages: TraMineR, dplyr, RColorBrewer, tidyverse, stringr, diagram, cluster, WeightedCluster, corrplot, glmnet, car, caret, ROCR,
 survminer, tidyverse, survival, tidyr 
 
-
-> We cannot provide the original administrative data due to confidentiality.
+We cannot provide the original administrative data due to confidentiality.
 
 **Code:**
 *	**1_pre_processing.R.** The code for section 1.3 of the manuscript execute the pre-processing of the 	administrative dataset of the Lombardy region. The covariates necessary for the analyses are created in this 	     dataset. In particular, each purchase of drugs will be assigned the relative DDD and pharmaceutical class. This 	     file outputs the initial dataset with 51 features.
@@ -28,12 +27,12 @@ survminer, tidyverse, survival, tidyr
 
 **Subfolders:**
 
-> **I. Auxiliary_function**:
+**I. Auxiliary_function**:
 -	create_seq.R. This function constructs the sequences with states 0 and 1 (No drug / drug) for the 52 weeks of 	  observation.
 - 	create_seq_hosp_days.R. This function creates a sequence indicating which days the patient was hospitalised 		in the 365 observation days.
 - 	create_coverage_days.R. This function calculates the days of drug coverage in the 365 observation days and 	       will be used for the adherence calculation.
 
-> **II. Dataset:**
+**II. Dataset:**
 -	DDD&class_pharm.xlxs. This excel file shows, for each ATC code, the defined daily dose (sheet 1) and the 	     related pharmacological class (sheet 2).
 -	data_for_sequences.Rdata. This dataset contains the selected patient cohort and all pharmacological purchases 	  for constructing the sequences.
 - 	patients_final_cohort.Rdata. This dataset contains the unique codes of the patients in the final patient 	     cohort.
