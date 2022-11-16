@@ -10,8 +10,6 @@
 # also created using "create_seq_hosp_days.R", the variable that counts the days of hospitalisation 
 # in the first year of observation.
 
-setwd("~/OneDrive - Politecnico di Milano/HF Regione Lombardia/Lavoro_nicole")
-
 #Library
 library(dplyr)
 
@@ -23,16 +21,16 @@ load("data_pulito.Rdata")
 data_rif <- data
 
 #Import the function to construct the sequence
-source("create_seq.R")
-source("create_seq_hosp_days.R")
+source("auxiliary_function/create_seq.R")
+source("auxiliary_function/create_seq_hosp_days.R")
 
 ###1.Dataset preparation ----
-##Exclude the reference hospitalization of each patients
+##Exclude the reference hospitalisation of each patients
 data <- data %>% filter(event_type == "drug purchase" | (event_type == "hospitalization" & hosp>1))
 
 ## Delete all those events that start after 365 days:
 #purchase carried out after 365 from the reference date
-#hospitalization starting after 365 after the reference date
+#hospitalisation starting after 365 after the reference date
 data <- select(data %>% filter(date_of_prescription - data_rif_ev <= 365 | 
                                  date_of_admission - data_rif_ev <= 365),-c(tot_hosp,tot_pharm,tot_events))
 
@@ -40,7 +38,7 @@ data <- select(data %>% filter(date_of_prescription - data_rif_ev <= 365 |
 data <- data %>% mutate(end_of_prescription = if_else(date_of_prescription + qt_pharma - data_rif_ev >= 365, 
                                                       data_rif_ev+365, date_of_prescription + qt_pharma))
 
-##Truncate the hospitalization that exceed the first year of observation
+##Truncate the hospitalisation that exceed the first year of observation
 data <- data %>% mutate(date_of_discharge = if_else(date_of_discharge - data_rif_ev >= 365,  
                                                     data_rif_ev + 365, date_of_discharge))
 
@@ -50,7 +48,7 @@ data <- data %>% filter((event_type =="hospitalization" & date_of_admission < da
 ##Date check
 data <- data %>% mutate(date_of_admission = if_else(date_of_admission<data_rif_ev, data_rif_ev,date_of_admission))
 
-##Update the total number of hospitalization and drug purchase
+##Update the total number of hospitalisation and drug purchase
 count_event <- data.frame(data %>% filter(event_type=="hospitalization") 
                           %>% group_by(COD_REG) %>% count(COD_REG,name="tot_hosp"))
 data <- left_join(data, count_event, by="COD_REG")
@@ -63,32 +61,34 @@ aa <- select(data %>% filter(event_type=="drug purchase" & class_pharma == "AA" 
 patients_3 <- unique(c(ras$COD_REG, bb$COD_REG, aa$COD_REG))
 data <- data %>% filter(COD_REG %in% patients_3)
 
-##Include the first reference hospitalization to those patients who haven't others hospitalization
+##Include the first reference hospitalisation to those patients who haven't others hospitalisation
 pat_drugs <- unique(select(data %>% filter(event_type=="drug purchase"), COD_REG)) 
 pat_hosp <- unique(select(data %>% filter(event_type=="hospitalization"), COD_REG)) 
 pat_loss <-unique(pat_drugs[!(pat_drugs$COD_REG %in% pat_hosp$COD_REG),"COD_REG"]) 
 data_one_hosp <- data_rif[which(data_rif$COD_REG %in% pat_loss & data_rif$hosp == 1),]
-data_one_hosp$tot_hosp <- 0 #Pongo a 0 il numero di ospedalizzazioni
+data_one_hosp$tot_hosp <- 0 
 data_one_hosp <- select(data_one_hosp, - tot_events)
 data <- data %>% bind_rows(data_one_hosp)
 
-##Update the total number of other pharma (excludin RAS, BB and AA) taken by the patient
+##Update the total number of other pharma (excluding RAS, BB, AA, DIU and AAG) taken by the patient
 count_pharm <- data.frame(data %>% group_by(COD_REG,.drop=FALSE) 
-                          %>% filter(!is.na(class_pharma) & !(class_pharma %in% c("RAS","AA","BB"))) 
+                          %>% filter(!is.na(class_pharma) & !(class_pharma %in% c("RAS","AA","BB","DIU","AAG"))) 
                           %>% distinct(class_pharma) %>% count(name="n_others_pharma"))
 
 data <- left_join(select(data,-n_class_pharma), count_pharm, by="COD_REG")
 
-##Update the total number of drugs 
+##Update the total number of drugs purchase for each patient
 count_event <- data.frame(data %>% filter(event_type=="drug purchase") 
                           %>% group_by(COD_REG) %>% count(COD_REG,name="tot_pharm"))
 data_for_sequences <- left_join(select(data,-tot_pharm), count_event, by="COD_REG")
+
 #Save this dataset with update information about hospitalisation and drug purchase
 save(data_for_sequences, file ="dataset/data_for_sequences")
 
 ###2. Dataset undersampling, saving the patients in the final cohort ----
 data <- stratified(data_for_sequences, c("death"), 0.35)
 save(data$COD_REG,file="dataset/patients_final_cohort")
+
 ###3.Sequences RAS, BB, AA, DIU and AAG----
 data_pharm <- data %>% select("COD_REG","event_type","data_rif_ev","date_of_prescription",
                               "end_of_prescription","qt_pharma","class_pharma","pharm")
@@ -112,7 +112,7 @@ save(seq_diu, file="dataset/seq_diu.Rdata")
 save(seq_aag, file="dataset/seq_aag.Rdata")
 
 ###4.Combined-sequences RAS & BB & AA ----
-classe_ras <- unique(seq_ace[,"COD_REG"])
+classe_ras <- unique(seq_ras[,"COD_REG"])
 classe_bb <- unique(seq_bb[,"COD_REG"])
 classe_aa <- unique(seq_aa[,"COD_REG"])
 
@@ -153,7 +153,7 @@ for (i in patients)
 seq_combination[is.na(seq_combination)] <- "No drugs"
 save(seq_combination, file = "dataset/seq_combination.Rdata")
 
-###5.LOS in the first year of hospitalization ----
+###5.LOS in the first year of hospitalisation ----
 data_hosp <- data %>% filter(event_type == "hospitalization")
 data_hosp <- select(data_hosp, c("COD_REG","event_type","data_rif_ev","date_of_admission",
                                  "date_of_discharge","LOS","hosp","tot_hosp"))

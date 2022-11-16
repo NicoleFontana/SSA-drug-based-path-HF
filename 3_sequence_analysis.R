@@ -6,9 +6,7 @@
 # time spent in each state and the transition rates between states are shown. Entropy and 
 # turbulence and their correlation are also calculated.
 
-setwd("~/OneDrive - Politecnico di Milano/HF Regione Lombardia/Lavoro_nicole")
-
-#Library
+#Libraries
 library(TraMineR)
 library(cluster)
 library(WeightedCluster)
@@ -17,7 +15,7 @@ library(diagram)
 library(RColorBrewer)
 
 #Import of the patients in the dataset undersampled (since the sequence analysis is performed only on these data)
-#The computation of this dataset is performed in 2_sequence_construction
+#The computation of this dataset is performed in "2_sequence_construction.R"
 load("dataset/patients_final_cohort.Rdata")
 
 ##1. Combined-sequences ----
@@ -78,7 +76,7 @@ par(fig=c(0,1,0,0.9), new=TRUE)
 corrplot(comb_rate, method="number",is.corr = FALSE,tl.cex=0.8,
          tl.col = 'black',col = c(brewer.pal(9, "BuGn"))[c(4,6:9)],col.lim = c(0, 1))
 par(fig=c(0,1,0.9,0.95), new=TRUE)
-title(main = "Transition rate between states",font.main=2,cex.main=1.5,adj = 0,line=3)
+title(main = "Transition rates between states",font.main=2,cex.main=1.5,adj = 0,line=3)
 
 ##2. Diuretic-sequences ----
 load("dataset/seq_diu.Rdata")

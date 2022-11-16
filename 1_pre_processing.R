@@ -5,8 +5,6 @@
 #The covariates necessary for the analyses are created in this dataset. In particular, 
 #each purchase of drugs will be assigned the relative DDD and pharmaceutical class.
 
-setwd("~/OneDrive - Politecnico di Milano/HF Regione Lombardia/Materiale")
-
 #Library
 library(dplyr)
 library(stringr)
@@ -17,12 +15,11 @@ load("HF.Rdata")
 data <- HF.2006_2012
 
 #Create the column that identifies the event: hospitalization (41) or pharmaceutical purchase (30)
-#Delete existing covariate called tipo_prest
 data <- select(data %>% mutate
                (event_type = if_else(data["tipo_prest"] == 41, "hospitalization", "drug purchase"),.after=labelOUT),
                -tipo_prest)
 
-##Count the number of hospitalizations and drug purchases of each patient
+##Count the number of hospitalisations and drug purchases of each patient
 events_type <- data %>% group_by(COD_REG,event_type)%>%count(COD_REG,event_type)
 tot_hosp <- events_type[which(events_type$event_type == "hospitalization"),c(1,3)]
 colnames(tot_hosp) <- c("COD_REG","tot_hosp")
@@ -38,7 +35,7 @@ data <- data %>% filter(tot_hosp > 0 & tot_pharm > 0)
 data <- data %>% mutate(tot_events = tot_hosp + tot_pharm)
 
 ##Reorder each patient's rows from oldest to newest with respect to the performance date.
-#If two records have the same performance date, put the hospitalization first
+#If two records have the same performance date, put the hospitalisation first
 data <- data %>% group_by(COD_REG) %>% arrange(data_prest,class_prest,.by_group = TRUE)
 
 ##Create follow-up variable
@@ -49,20 +46,20 @@ data <- select(data %>% mutate
 ##Keep surviving patients for at least one year
 data <- data %>% filter(timeOUT>365)
 
-##Create the covariates that identify the hospitalization diagnosis and the ATC codes of pharmaceutical purchases
+##Create the covariates that identify the hospitalisation diagnosis and the ATC codes of pharmaceutical purchases
 data <- select(data %>% mutate 
                (CCS_principal_diagnosis = if_else(event_type == "hospitalization", class_prest, NULL),         
                  ATC_code = if_else(event_type == "drug purchase", class_prest, NULL),.after = event_type),
                -class_prest)
 
-##Create the covariates that describe the lenght of stay in hospital for hospitalization,
-#and the total covarage days for the pharmaceutical purchase
+##Create the covariates that describe the lenght of stay in hospital for each hospitalisation,
+#and the covarage days for each pharmaceutical purchase
 data <- select(data %>% mutate
                (LOS = if_else(event_type == "hospitalization", qt_prest_Sum, NULL),
                  qt_pharma = if_else(event_type == "drug purchase", qt_prest_Sum, NULL),.after = ATC_code),
                -qt_prest_Sum)
 
-##Create the covariates that indicate the date of admission and discharge from the hospitalization
+##Create the covariates that indicate the date of admission and discharge from the hospitalisation
 #and the date of purchase of a drug
 data <- select(data %>% mutate
                (date_of_discharge = if_else(event_type == "hospitalization", data_prest, NULL),
@@ -74,11 +71,11 @@ data <- select(data %>% mutate
 data[which(data[,"event_type"] == "hospitalization"),"ASL_RESIDENZA"] <- NA
 data[which(data[,"event_type"] == "drug purchase"),"strutt_id"] <- NA
 
-##Create the variable that represents the patient's status (alive / dead)
+##Create the variable that represents the patient's status (alive / dead) at the end of the study
 data <- select(data %>% mutate (death = if_else(labelOUT == "DECEDUTO", 1, 0)),
                -labelOUT)
 
-##Create the index of the hospitalization and pharmaceutical purchase records
+##Create the index of the hospitalisation and pharmaceutical purchase records
 data <- data %>% group_by(COD_REG,event_type) %>% mutate(index=seq_along(tot_pharm),.after = COD_REG)
 data <- data %>% mutate(hosp = ifelse(event_type=="hospitalization",index,NA),.after = COD_REG)
 data <- select(data %>% mutate(pharm = ifelse(event_type=="drug purchase",index,NA),.after = hosp),-index)
@@ -101,7 +98,7 @@ count_pharm <- data.frame(data %>% filter(is.na(class_pharma) == FALSE) %>%  gro
 data <- left_join(data, count_pharm, by="COD_REG")
 
 
-##Calculate the number of comorbidities in hospitalized patients at each hospitalization event
+##Calculate the number of comorbidities at each hospitalisation event
 comorbidity <- c("metastatic", "chf", "dementia", "renal", "wtloss", "hemiplegia", "alcohol", "tumor", "arrhythmia",
                  "pulmonarydz", "coagulopathy", "compdiabetes", "anemia", "electrolytes", "liver", "pvd", "psychosis",           
                  "pulmcirc", "hivaids", "hypertension")
@@ -120,7 +117,6 @@ for (i in 2:dim(data)[1])
 }
 
 ##Assign the defined daily dose (or COMBO) at each drug purchase
-###Creo la variabile DDD [mg]
 DDD_value = read_excel("~/OneDrive - Politecnico di Milano/HF Regione Lombardia/Lavoro_nicole/dataset/DDD&class_pharm.xlsx",sheet="Foglio1")
 DDD=rep(NA,dim(data)[1])
 COMBO=rep(NA,dim(data)[1])

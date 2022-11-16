@@ -4,8 +4,6 @@
 #This code presents the survival analysis using Cox's regression model. The comparison between the 
 #two significant clusters of the combined-sequences reported in 3.6.1 of the manuscript is shown.
 
-setwd("~/OneDrive - Politecnico di Milano/HF Regione Lombardia/Lavoro_nicole")
-
 #Libraries
 library(dplyr)
 library(survminer)
@@ -16,7 +14,7 @@ library(tidyr)
 library(TraMineR)
 
 #Import the function to compute adherence
-source("create_coverage_days.R")
+source("auxiliary_function/create_coverage_days.R")
 
 #Load the final dataset
 load("dataset/final_dataset")
@@ -56,7 +54,6 @@ ggforest(mod.cox,
 ###AGE
 k=4
 binary_df <- with(data,data.frame(age = c(45,65,80,95),
-                                  #age = rep(mean(age, na.rm = TRUE),k),
                                   gender = rep("M", k), 
                                   LOS = rep(mean(LOS, na.rm = TRUE),k),
                                   tot_procedures= rep(0,k),
@@ -84,10 +81,8 @@ ggsurvplot(fit,
            legend.labs=paste("Age=",c(45,65,80,95),sep = ""),
            break.time.by=365,
            palette = c(brewer.pal(8, "Set2")), 
-           #palette =  c(brewer.pal(8, "Paired")),
            xlab = "Time [days]",
            xlim=c(365, 2500),
-           #title="Survival probability plot",
            ggtheme = theme_bw()+theme(plot.title = element_text(size=16),
                                       plot.title.position = "plot",
                                       legend.title=element_blank()),
@@ -120,15 +115,12 @@ ggsurvplot(fit,
            data=binary_df, 
            size = 0.5,
            censor.size=0.5,
-           #pval = TRUE,
            conf.int = TRUE, 
            xlim=c(365, 2500),
            legend.labs=paste("Gender=",c("Male","Female"),sep = ""),
            break.time.by=365,
            palette = c(brewer.pal(8, "Set2")), 
-           #palette =  c(brewer.pal(8, "Paired")),
            xlab = "Time [days]",
-           # title="Survival probability plot",
            ggtheme = theme_bw()+theme(plot.title = element_text(size=16),
                                       plot.title.position = "plot",
                                       legend.title=element_blank()),
@@ -142,7 +134,6 @@ k=3
 binary_df <- with(data,data.frame(age = rep(mean(age, na.rm = TRUE),k),
                                   gender = rep("M",k),
                                   LOS=c(0,15,200),
-                                  #LOS = rep(mean(LOS, na.rm = TRUE),k),
                                   tot_procedures= rep(0,k),
                                   MCS = rep(levels(MCS)[1],k),
                                   cluster=rep(levels(cluster)[1],k),
@@ -162,15 +153,12 @@ ggsurvplot(fit,
            data=binary_df, 
            size = 0.5,
            censor.size=0.5,
-           #pval = TRUE,
            conf.int = TRUE, 
            xlim=c(365, 2500),
            legend.labs=paste("LOS=",c(0,15,200), " days",sep = ""),
            break.time.by=365,
            palette = c(brewer.pal(8, "Set2")), 
-           #palette =  c(brewer.pal(8, "Paired")),
            xlab = "Time [days]",
-           # title="Survival probability plot",
            ggtheme = theme_bw()+theme(plot.title = element_text(size=16),
                                       plot.title.position = "plot",
                                       legend.title=element_blank()),
@@ -186,7 +174,6 @@ binary_df <- with(data,data.frame(age = rep(mean(age, na.rm = TRUE),k),
                                   LOS = rep(mean(LOS, na.rm = TRUE),k),
                                   tot_procedures= rep(0,k),
                                   MCS=c("Good","Intermediate","Poor"),
-                                  #MCS = rep(levels(MCS)[1],k),
                                   cluster=rep(levels(cluster)[1],k),
                                   AAG=rep("Low_Adopters",k),
                                   DIU=rep("Low_Adopters",k)
@@ -204,15 +191,12 @@ ggsurvplot(fit,
            data=binary_df, 
            size = 0.5,
            censor.size=0.5,
-           #pval = TRUE,
            conf.int = TRUE, 
            xlim=c(365, 2500),
            legend.labs=paste("MCS=",c("Good","Intermediate","Poor"),sep = ""),
            break.time.by=365,
            palette = c(brewer.pal(8, "Set2")), 
-           #palette =  c(brewer.pal(8, "Paired")),
            xlab = "Time [days]",
-           # title="Survival probability plot",
            ggtheme = theme_bw()+theme(plot.title = element_text(size=16),
                                       plot.title.position = "plot",
                                       legend.title=element_blank()),
@@ -245,15 +229,12 @@ ggsurvplot(fit,
            data=binary_df, 
            size = 0.5,
            censor.size=0.5,
-           #pval = TRUE,
            conf.int = TRUE, 
            xlim=c(365, 2500),
            legend.labs=c("No procedures","One procedure","Two procedures"),
            break.time.by=365,
            palette = c(brewer.pal(8, "Set2")), 
-           #palette =  c(brewer.pal(8, "Paired")),
            xlab = "Time [days]",
-           # title="Survival probability plot",
            ggtheme = theme_bw()+theme(plot.title = element_text(size=16),
                                       plot.title.position = "plot",
                                       legend.title=element_blank()),
@@ -269,13 +250,11 @@ binary_df <- with(data,data.frame(age = rep(mean(age, na.rm = TRUE),k),
                                   LOS = rep(mean(LOS, na.rm = TRUE),k),
                                   tot_procedures= rep(0,k),
                                   MCS = rep(levels(MCS)[1],k),
-                                  #cluster_comb=rep(levels(cluster_comb)[1],k),
                                   cluster=c(levels(cluster)[1],
                                             levels(cluster)[2],
                                             levels(cluster)[3],
                                             levels(cluster)[4],
                                             levels(cluster)[5],
-                                            #  levels(cluster_comb)[6],
                                             levels(cluster)[7],
                                             levels(cluster)[8]),
                                   AAG=rep("Low_Adopters",k),
@@ -295,14 +274,11 @@ ggsurvplot(fit,
            size = 0.5,
            censor.size=0.5,
            xlim=c(365, 2500),
-           #pval = TRUE,
            conf.int = TRUE, 
            legend.labs=paste("Cluster=",c(1:5,7,8),sep = ""),
            break.time.by=365,
            palette = c(brewer.pal(8, "Set2"))[c(1:6,8)], 
-           #palette =  c(brewer.pal(8, "Paired")),
            xlab = "Time [days]",
-           # title="Survival probability plot",
            ggtheme = theme_bw()+theme(plot.title = element_text(size=16),
                                       plot.title.position = "plot",
                                       legend.title=element_blank()),
@@ -321,8 +297,6 @@ binary_df <- with(data,data.frame(age = rep(mean(age, na.rm = TRUE),k),
                                   cluster=rep(levels(cluster)[1],k),
                                   DIU=c("Low_Adopters","Adopters","Low_Adopters"),
                                   AAG=c("Low_Adopters","Low_Adopters","Adopters")
-                                  #AAG=rep("Low_Adopters",k),
-                                  #DIU=rep("Low_Adopters",k)
 ))
 
 names <- c("gender",  "MCS","AAG","DIU")
@@ -337,15 +311,12 @@ ggsurvplot(fit,
            data=binary_df, 
            size = 0.5,
            censor.size=0.5,
-           #pval = TRUE,
            conf.int = TRUE, 
            xlim=c(365, 2500),
            legend.labs=c("Low adopters of DIU and AAG","DIU Adopters","AAG Adopters"),
            break.time.by=365,
            palette = c(brewer.pal(8, "Set2")), 
-           #palette =  c(brewer.pal(8, "Paired")),
            xlab = "Time [days]",
-           # title="Survival probability plot",
            ggtheme = theme_bw()+theme(plot.title = element_text(size=16),
                                       plot.title.position = "plot",
                                       legend.title=element_blank()),
@@ -431,7 +402,7 @@ kruskal.test(aderance_AA ~ cluster, data = cohort)
 kruskal.test(MCS_cat ~ cluster, data = cohort)
 kruskal.test(death ~ cluster, data = cohort)
 
-##Test between groups - continous variables
+##Test between groups - continuous variables
 wilcox.test(age ~ cluster, data = cohort)
 wilcox.test(LOS ~ cluster, data = cohort)
 wilcox.test(tot_hosp ~ cluster, data = cohort)
@@ -478,14 +449,6 @@ p4<-ggplot(data=cohort, aes(x = as.factor(cluster), fill = as.factor(aderance_AA
 plot <-ggarrange(p1,p2,p3,p4, common.legend = TRUE,legend="bottom",
                  ncol = 4, nrow = 1,legend.grob=get_legend(p4, position = "bottom"))
 annotate_figure(plot, top = text_grob("Proportion of patients' adherence to", size = 14))
-
-
-ggplot(data=cohort, aes(x = as.factor(cluster), fill = as.factor(aderance_BB))) + 
-  geom_bar(position = "fill") +
-  scale_fill_manual(values=c("firebrick2","green3")) +
-  labs( y = "Proportion of patients", x = "Cluster") + labs(fill='Adherence')+
-  ggtitle("Patients adhering to BB") + 
-  theme(text = element_text(size = 15)) 
 
 ##Comparison of sequences entropy and turbulence between groups
 load("dataset/seq_combination_mortality")

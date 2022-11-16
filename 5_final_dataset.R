@@ -8,8 +8,6 @@
 # cluster variable will indicate belonging to the combined-sequence partition; DIU and AAG will 
 # indicate whether the patient is a low-adopter/ adopter of the two drugs.
 
-setwd("~/OneDrive - Politecnico di Milano/HF Regione Lombardia/Lavoro_nicole")
-
 #Library
 library(dplyr)
 
@@ -19,7 +17,7 @@ set.seed(26091998)
 #Load the pre-processed dataset from file "1_pre_processing.R".
 load("data_pulito.Rdata") 
 
-#Load the dataset constructed for the sequence computation "2_sequence_construction"
+#Load the dataset constructed for the sequence computation "2_sequence_construction.R"
 #(which contains updated information about hospitalisation and drug purchase)
 load("dataset/data_for_sequences.Rdata") 
 patients <- unique(data_for_sequences$COD_REG)
@@ -47,7 +45,7 @@ data <- left_join(data, select(data_for_sequences %>% group_by(COD_REG) %>% filt
 ##1. Create the variables which represent the comorbidities for the calculation of the MCS ----
 ##Using the table in appendix A, I check the CCS codes assigned to each reference 
 # hospitalization and check 1 if there is a correspondence with the diagnoses for the MCS
-codici <-unique(data$CCS_principal_diagnosis)#Verifico se ci sono dei codici
+codici <-unique(data$CCS_principal_diagnosis)
 dim(CCS[unique(as.numeric(CCS[,1])) %in% c(1,79,38,40,44,58,156,158,5,80,81,83,95,3,202,205,211,114,115,117,248,109,54,83,139,9,96,213,58,48,100,101),])
 
 #Separate the CCS variable, as it is made up of both the code and the diagnosis
@@ -62,6 +60,7 @@ colnames(new_comorbidity) <- c("COD_REG","Tuberculosis","Parkinson", "Lymphoma",
                                "Other_neurological","Rheumatoid", "Vascular","Cerebrovascular","Gout","Epilepsy",
                                "Ulcer", "Valvular", "Obesity","Hypothyroidism","Infarction")
 new_comorbidity[,"COD_REG"] <- data[,"COD_REG"]
+
 #Mapping the CCS in the diagnosis
 for (i in 1:dim(data)[1])
 {
@@ -84,7 +83,6 @@ for (i in 1:dim(data)[1])
   
 }
 comorbidities_tab <- left_join(data[,c(1,6:25)], as.data.frame(new_comorbidity), by="COD_REG")
-#save(comorbidities_tab, file = "dataset/comorbidities_tab")
 
 ##2. Compute the multisource comorbidity score ---- 
 comorbidities_tab <- comorbidities_tab %>%
@@ -94,17 +92,14 @@ comorbidities_tab <- comorbidities_tab %>%
            10*Tuberculosis +
            8*psychosis +
            8*liver +
-           #    6*anagrafe$FAR_ANXIETY +
            6*wtloss +
            6*dementia +
-           #   5*anagrafe$FAR_MALIGNANCIES +
            5*Parkinson +
            5*Lymphoma +
            5*hemiplegia +
            5*coagulopathy +
            4*electrolytes+
            4*Kidney +
-           #   4*anagrafe$DIALISI_RENALE +
            4*chf+
            3*Other_neurological +
            3*Rheumatoid +
@@ -121,8 +116,7 @@ comorbidities_tab <- comorbidities_tab %>%
            1*Valvular +
            1*arrhythmia +
            1*Obesity +
-           1*Hypothyroidism
-  )
+           1*Hypothyroidism)
 
 ##3. Add necessary covariates to the dataset ----
 #a. Add the MCS to each patients
@@ -137,10 +131,10 @@ data <- data %>% filter(COD_REG %in% patients_final_cohort)
 ##b. Categorised the MCS 
 data <- data %>% mutate(MCS=cut(data$MCS_cont, breaks=c(0,4, 9,42),include.lowest=TRUE))
 data$MCS<- factor(data$MCS , levels=c("[0,4]","(4,9]","(9,42]"),
-                  labels= c("Good","Intermediate","Poor"))
+                  labels= c("Low","Intermediate","High"))
 
 ##c. Recompute the total procedures
-data <- data %>% mutate(tot_procedures = as.numeric(CABG) +as.numeric( PTCA) + as.numeric(ICD) +as.numeric( SHOCK)-4)
+data <- data %>% mutate(tot_procedures = as.numeric(CABG) + as.numeric(PTCA) + as.numeric(ICD) + as.numeric(SHOCK)-4)
 
 ##d. Add the LOS, the total number of day in hospital in the first year
 load("dataset/seq_hosp_days.Rdata") #Import the sequence of hospitalisation of each days

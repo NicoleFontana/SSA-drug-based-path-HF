@@ -8,8 +8,6 @@
 # Once the final partition is chosen, using the visualisation tools shown in "3_sequence_analysis.R", 
 # the sequences in each cluster are analysed.
 
-setwd("~/OneDrive - Politecnico di Milano/HF Regione Lombardia/Lavoro_nicole")
-
 #Library
 library(TraMineR)
 library(cluster)
@@ -52,9 +50,9 @@ ggplot(data=statistic, aes(x=cluster, y=value, group=variable, color=variable)) 
   theme(plot.title = element_text(),plot.title.position = "plot")
 
 #Analysing the clusters that have been created
-cluster_2<- factor(wardRange$clustering$cluster2, labels = paste("Cluster", 1:2))
-cluster_5<- factor(wardRange$clustering$cluster5, labels = paste("Cluster", 1:5))
-cluster_8<- factor(wardRange$clustering$cluster8, labels = paste("Cluster", 1:8))
+cluster_2 <- factor(wardRange$clustering$cluster2, labels = paste("Cluster", 1:2))
+cluster_5 <- factor(wardRange$clustering$cluster5, labels = paste("Cluster", 1:5))
+cluster_8 <- factor(wardRange$clustering$cluster8, labels = paste("Cluster", 1:8))
 
 #State distribution plot
 seqdplot(seq.comb, cluster_2, border=NA,with.legend=FALSE)
@@ -162,7 +160,7 @@ ggplot(data=statistic, aes(x=cluster, y=value, group=variable, color=variable)) 
   geom_line()+
   geom_point()+
   scale_x_discrete(limits=2:8)+
-  labs( y = "Value", x = "Cluster") + labs(color='Metric')+
+  labs(y = "Value", x = "Cluster") + labs(color='Metric')+
   ggtitle("Cluster quality statistics")+theme_bw()+
   theme(plot.title = element_text(),plot.title.position = "plot")
 
