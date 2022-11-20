@@ -1,4 +1,4 @@
-# Sequence analysis techniques to evaluate drugs-based diagnostic therapeutic paths in heart failure patients
+## Sequence analysis techniques to evaluate drugs-based diagnostic therapeutic paths in heart failure patients
 Thesis work for Master Degree in Mathematical Engineering - Statistical Learning at Politecnico di Milano.
 
 ###### **Authors:** Nicole Fontana
@@ -10,8 +10,8 @@ All analyses were performed using R version 4.1.2 (R Core Team (2021)).
 Required R packages: TraMineR, dplyr, RColorBrewer, tidyverse, stringr, diagram, cluster, WeightedCluster, corrplot, glmnet, car, caret, ROCR,
 survminer, tidyverse, survival, tidyr 
 
-We cannot provide the original administrative data due to confidentiality.
-
+Data are not publicly available due to confidentiality and privacy restrictions.
+ 
 **Code:**
 *	**1_pre_processing.R.** The code for section 1.3 of the manuscript execute the pre-processing of the 	administrative dataset of the Lombardy region. The covariates necessary for the analyses are created in this 	     dataset. In particular, each purchase of drugs will be assigned the relative DDD and pharmaceutical class. This 	     file outputs the initial dataset with 51 features.
 
