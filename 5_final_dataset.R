@@ -67,7 +67,7 @@ for (i in 1:dim(data)[1])
   code = as.numeric(data[i, "CCS"])
   if(code == 1 ){new_comorbidity[i,"Tuberculosis"] = 1}
   if(code == 79){new_comorbidity[i,"Parkinson"] = 1}
-  if(code %in% c(38, 40, 44, 58)){new_comorbidity[i,"Lymphoma"] = 1}
+  if(code %in% c(38, 40, 41, 44, 58)){new_comorbidity[i,"Lymphoma"] = 1}
   if(code %in% c(156, 158)){new_comorbidity[i,"Kidney"] = 1}
   if(code %in% c(5, 79, 80, 81, 83, 95)){new_comorbidity[i,"Other_neurological"] = 1}
   if(code %in% c(3,202,205, 211)){new_comorbidity[i,"Rheumatoid"] = 1}
